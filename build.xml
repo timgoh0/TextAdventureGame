@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ant buildfile to handle generation -->
+<!-- Mucked about by timgoh0 -->
+<!-- TODO: Bodge junit testing into this -->
+  <project name="TextAdventureGame" default="compile" basedir=".">
+  	<!-- Specify the path to javacc in build.properties -->
+  	<property file="./build.properties" />
+    <property name="src" location="src"/>
+    <property name="build" location="bin"/>
+    <property name="dist"  location="dist"/>
+
+    <target name="init">
+      	<!-- Create the time stamp -->
+      	<tstamp/>
+      	<!-- Create the build directory structure used by compile -->
+      	<mkdir dir="${build}"/>
+		<mkdir dir="${dist}" />
+    </target>
+
+	<target name="buildgrammar" depends="init">
+	  	<javacc
+	  	    target="src/GameGrammar.jj"
+	  	    outputdirectory="${src}/uk/ac/cam/swdes/sv2/"
+	  	    javacchome="${JAVACC_HOME}"
+	  	/>
+	</target>
+
+	 <target name="compile" depends="buildgrammar" 
+		description="compile the source " >
+	    <!-- Compile the java code from ${src} into ${build} -->
+	    <javac srcdir="${src}" destdir="${build}"/>
+	  </target>
+
+    <target name ="makejar-dist" description="Creates dist jar"
+		depends="compile">
+      <jar jarfile="${dist}/TextAdventureGame.jar" includes="*.class" basedir="bin"/>
+    </target>
+
+  <target name="clean"  description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  </project>

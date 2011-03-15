@@ -1,0 +1,33 @@
+/** Grammar generation file */
+/* @author: timgoh0 */
+/* TODO: Write actual grammar */
+PARSER_BEGIN(GameGrammar)
+package uk.ac.cam.swdes.sv2;
+
+public class GameGrammar{
+
+}
+
+PARSER_END(GameGrammar)
+
+TOKEN :
+{
+  <LBRACE: "{">
+| <RBRACE: "}">
+}
+
+/** Root production. */
+void Input() :
+{ int count; }
+{
+  count=MatchedBraces() <EOF>
+  { System.out.println("The levels of nesting is " + count); }
+}
+
+/** Brace counting production. */
+int MatchedBraces() :
+{ int nested_count=0; }
+{
+  <LBRACE> [ nested_count=MatchedBraces() ] <RBRACE>
+  { return ++nested_count; }
+}
