@@ -1,0 +1,4 @@
+Building Instructions
+---------------------
+
+Run ant task makejar-dist. Get jarfile in dist/. Enjoy.
