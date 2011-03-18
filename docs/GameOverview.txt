@@ -1,0 +1,5 @@
+Player is at the CL and late for a supervision.
+Doors are locked. Player doesn't know where the supervision is and must
+
+a) Find where is is
+b) Get in and get to supervision
