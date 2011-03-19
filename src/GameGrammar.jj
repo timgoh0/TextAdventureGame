@@ -1,6 +1,5 @@
 /** Grammar generation file */
 /* @author: timgoh0 */
-/* TODO: Write actual grammar */
 
 options {
   IGNORE_CASE = true;
@@ -42,6 +41,6 @@ void Input() :
 	  	{ s.moveDirection(Direction.UP); }
 	  	| <DOWN>
 	  	{ s.moveDirection(Direction.DOWN); }
-	)
+	) "\n"
 }
 

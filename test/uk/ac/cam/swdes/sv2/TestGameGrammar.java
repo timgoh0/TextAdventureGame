@@ -15,12 +15,12 @@ public class TestGameGrammar {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		//Init the parser, non-standard behaviour because this is a static parser
+		GameGrammar g = new GameGrammar(new StringReader(""));
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		//Init the parser, non-standard behaviour because this is a static parser
-		GameGrammar g = new GameGrammar(new StringReader(""));
 	}
 
 	/**
@@ -31,105 +31,77 @@ public class TestGameGrammar {
 	public final void movementTest() throws ParseException {
 		GameState s = GameState.getInstance();
 		
-		GameGrammar.ReInit(new StringReader("North"));
+		GameGrammar.ReInit(new StringReader("North\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.NORTH){
-			fail("Parsing for North failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.NORTH, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("n"));
+		GameGrammar.ReInit(new StringReader("n\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.NORTH){
-			fail("Parsing for n failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.NORTH, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("East"));
+		GameGrammar.ReInit(new StringReader("East\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.EAST){
-			fail("Parsing for East failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.EAST, s.lastDirection);
 		s.lastDirection = null;
 		
-		
-		GameGrammar.ReInit(new StringReader("e"));
+		GameGrammar.ReInit(new StringReader("e\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.EAST){
-			fail("Parsing for e failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.EAST, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("South"));
+		GameGrammar.ReInit(new StringReader("South\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.SOUTH){
-			fail("Parsing for South failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.SOUTH, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("s"));
+		GameGrammar.ReInit(new StringReader("s\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.SOUTH){
-			fail("Parsing for s failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.SOUTH, s.lastDirection);
+		s.lastDirection = null;
+
+		GameGrammar.ReInit(new StringReader("West\n"));
+		GameGrammar.Input();
+		assertEquals(Direction.WEST, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("South"));
+		GameGrammar.ReInit(new StringReader("w\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.SOUTH){
-			fail("Parsing for South failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.WEST, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("s"));
+		GameGrammar.ReInit(new StringReader("up\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.SOUTH){
-			fail("Parsing for s failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.UP, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("West"));
+		GameGrammar.ReInit(new StringReader("u\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.WEST){
-			fail("Parsing for West failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.UP, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("w"));
+		GameGrammar.ReInit(new StringReader("Down\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.WEST){
-			fail("Parsing for w failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.DOWN, s.lastDirection);
 		s.lastDirection = null;
 		
-		GameGrammar.ReInit(new StringReader("up"));
+		GameGrammar.ReInit(new StringReader("d\n"));
 		GameGrammar.Input();
-		if(s.lastDirection != Direction.UP){
-			fail("Parsing for Up failed, got "+s.lastDirection);
-		}
-		s.lastDirection = null;
-		
-		GameGrammar.ReInit(new StringReader("u"));
-		GameGrammar.Input();
-		if(s.lastDirection != Direction.UP){
-			fail("Parsing for u failed, got "+s.lastDirection);
-		}
-		s.lastDirection = null;
-		
-		GameGrammar.ReInit(new StringReader("Down"));
-		GameGrammar.Input();
-		if(s.lastDirection != Direction.DOWN){
-			fail("Parsing for DOWN failed, got "+s.lastDirection);
-		}
-		s.lastDirection = null;
-		
-		GameGrammar.ReInit(new StringReader("d"));
-		GameGrammar.Input();
-		if(s.lastDirection != Direction.DOWN){
-			fail("Parsing for d failed, got "+s.lastDirection);
-		}
+		assertEquals(Direction.DOWN, s.lastDirection);
 		s.lastDirection = null;
 		
 	}
+	
+	/**
+	 * Tests for faulty token
+	 */
+	@Test(expected = TokenMgrError.class)
+	public void testBadToken() throws ParseException {
+		GameGrammar.ReInit(new StringReader("jfdksfkdnvcidsahfeoiuwfr"));
+		GameGrammar.Input();
+	}
+	
+
 
 }
