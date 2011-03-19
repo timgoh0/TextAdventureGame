@@ -1,6 +1,12 @@
 /** Grammar generation file */
 /* @author: timgoh0 */
 /* TODO: Write actual grammar */
+
+options {
+  IGNORE_CASE = true;
+}
+
+
 PARSER_BEGIN(GameGrammar)
 package uk.ac.cam.swdes.sv2;
 
@@ -10,24 +16,32 @@ public class GameGrammar{
 
 PARSER_END(GameGrammar)
 
-TOKEN :
+TOKEN : //Directions
 {
-  <LBRACE: "{">
-| <RBRACE: "}">
+    < NORTH: "north" | "n" >
+  | < EAST: "east" | "e"  >
+  | < SOUTH: "south" | "s" >
+  | < WEST: "west" | "w" >
+  | < UP: "up" | "u" >
+  | < DOWN: "down" | "d" >
 }
 
-/** Root production. */
+
 void Input() :
-{ int count; }
+{ GameState s = GameState.getInstance(); }
 {
-  count=MatchedBraces() <EOF>
-  { System.out.println("The levels of nesting is " + count); }
+	(   <NORTH>
+	  	{ s.moveDirection(Direction.NORTH); }
+	  	| <EAST>
+	  	{ s.moveDirection(Direction.EAST); }
+	  	| <SOUTH>
+	  	{ s.moveDirection(Direction.SOUTH); }
+	  	| <WEST>
+	  	{ s.moveDirection(Direction.WEST); }
+	  	| <UP>
+	  	{ s.moveDirection(Direction.UP); }
+	  	| <DOWN>
+	  	{ s.moveDirection(Direction.DOWN); }
+	)
 }
 
-/** Brace counting production. */
-int MatchedBraces() :
-{ int nested_count=0; }
-{
-  <LBRACE> [ nested_count=MatchedBraces() ] <RBRACE>
-  { return ++nested_count; }
-}

@@ -2,12 +2,13 @@
 <!-- Ant buildfile to handle generation -->
 <!-- Mucked about by timgoh0 -->
 <!-- TODO: Bodge junit testing into this -->
-  <project name="TextAdventureGame" default="compile" basedir=".">
+  <project name="TextAdventureGame" default="build" basedir=".">
   	<!-- Specify the path to javacc in build.properties -->
   	<property file="./build.properties" />
     <property name="src" location="src"/>
     <property name="build" location="bin"/>
-    <property name="dist"  location="dist"/>
+    <property name="dist" location="dist"/>
+  	<property name="test" location="test" />
 
     <target name="init">
       	<!-- Create the time stamp -->
@@ -25,14 +26,19 @@
 	  	/>
 	</target>
 
-	 <target name="compile" depends="buildgrammar" 
+	 <target name="build" depends="buildgrammar" 
 		description="compile the source " >
 	    <!-- Compile the java code from ${src} into ${build} -->
 	    <javac srcdir="${src}" destdir="${build}"/>
 	  </target>
-
+  	
+	 <target name="build-test" depends="build" 
+		description="compile the tests " >
+	    <javac srcdir="${test}" destdir="${build}"/>
+	  </target>
+  	
     <target name ="makejar-dist" description="Creates dist jar"
-		depends="compile">
+		depends="build">
       <jar jarfile="${dist}/TextAdventureGame.jar" includes="*.class" basedir="bin"/>
     </target>
 
