@@ -38,7 +38,7 @@
 	  </target>
   	
     <target name ="makejar-dist" description="Creates dist jar"
-		depends="build">
+		depends="clean,build">
       <jar jarfile="${dist}/TextAdventureGame.jar" includes="*.class" basedir="bin"/>
     </target>
 
