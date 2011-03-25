@@ -30,6 +30,21 @@ public class GameState {
 	
 	public void moveDirection(Direction d){
 		lastDirection = d;
-		//@TODO: Implement direction frobbage.
+		//TODO: Implement direction frobbage.
+	}
+	
+	public void take(String item){
+		//TODO: STUB, implement game logic
+		System.out.println("Taking "+item);
+	}
+	
+	public void give(String item, String person){
+		//TODO: STUB, implement game logic
+		System.out.println("Giving "+item+" to "+person);
+	}
+	
+	public void drop(String item){
+		//TODO: STUB, implement game logic
+		System.out.println("Dropping "+item);
 	}
 }

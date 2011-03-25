@@ -9,7 +9,38 @@ options {
 PARSER_BEGIN(GameGrammar)
 package uk.ac.cam.swdes.sv2;
 
+import java.io.StringReader;
+import java.io.Reader;
+import java.io.InputStream;
+
 public class GameGrammar{
+
+	//Initialize itself, note that this is a STATIC parser
+	private static boolean isInit = false;
+	private static GameGrammar g;
+
+	public static void InitStaticParser(Reader r){
+		if(!isInit){
+			g = new GameGrammar(r);
+			isInit = true;
+		}else{
+			g.ReInit(r);
+		}
+	}
+	
+	public static void InitStaticParser(InputStream r){
+		if(!isInit){
+			g = new GameGrammar(r);
+			isInit = true;
+		}else{
+			g.ReInit(r);
+		}
+	}
+
+	public static void ParseString(String s) throws ParseException{
+		GameGrammar.InitStaticParser(new StringReader(s+"\n")); ///n to simulate cr you'd otherwise get from System.in
+		GameGrammar.Input();
+	}
 
 }
 
@@ -25,8 +56,33 @@ TOKEN : //Directions
   | < DOWN: "down" | "d" >
 }
 
+TOKEN : //Overall commands
+{
+	<QUIT: "exit" | "quit" >
+}
+
+TOKEN: //Actions, note whitespace after to separate operands
+{
+	< TAKE: "take " >
+  | < GIVE: "give " >
+  |	< DROP: "drop " >
+}
+
+TOKEN: //String, for matching items
+{
+	<  OBJECT_NAME : (["a"-"z"])+ >
+}
 
 void Input() :
+{ GameState s = GameState.getInstance(); }
+{
+	  (Direction())
+	| (Actions())
+	| ( <QUIT> { System.exit(0); } )
+	"\n"
+}
+
+void Direction() :
 { GameState s = GameState.getInstance(); }
 {
 	(   <NORTH>
@@ -41,6 +97,27 @@ void Input() :
 	  	{ s.moveDirection(Direction.UP); }
 	  	| <DOWN>
 	  	{ s.moveDirection(Direction.DOWN); }
-	) "\n"
+	)
+}
+
+void Actions() :
+{ 
+	GameState s = GameState.getInstance(); 
+	Token item;
+	Token person;
+}
+{
+	(     <TAKE> 
+		  item = <OBJECT_NAME>
+	  	{ s.take(item.image); }
+	  	| <GIVE>
+	      item = <OBJECT_NAME>
+	      " to "
+	      person = <OBJECT_NAME>
+	  	{ s.give(item.image, person.image); }
+	  	| <DROP>
+	  	  item = <OBJECT_NAME>
+	  	{ s.drop(item.image); }
+	)
 }
 
