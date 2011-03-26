@@ -68,6 +68,12 @@ TOKEN: //Actions, note whitespace after to separate operands
   |	< DROP: "drop " >
 }
 
+TOKEN: //Single arg operations
+{
+	< LOOK: "look">
+  | < INVENTORY : "inventory" | "i" >
+}
+
 TOKEN: //String, for matching items
 {
 	<  OBJECT_NAME : (["a"-"z"])+ >
@@ -78,6 +84,7 @@ void Input() :
 {
 	  (Direction())
 	| (Actions())
+	| (TupleActions())
 	| ( <QUIT> { System.exit(0); } )
 	"\n"
 }
@@ -101,6 +108,15 @@ void Direction() :
 }
 
 void Actions() :
+{
+	GameState s = GameState.getInstance();
+}
+{
+	  <LOOK> { s.look(); }
+	| <INVENTORY> { s.listInventory(); }
+}
+
+void TupleActions() :
 { 
 	GameState s = GameState.getInstance(); 
 	Token item;

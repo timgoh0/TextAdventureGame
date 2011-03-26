@@ -10,6 +10,9 @@ public class GameState {
 	
 	//Used for unit testing of direction parser
 	protected Direction lastDirection;
+	protected Room currentRoom = null;
+	protected GameObjectList<Item> inventory = new GameObjectList<Item>();
+	
 	
 	protected GameState(){
 		//Empty to prevent instantiation
@@ -28,14 +31,34 @@ public class GameState {
 		return instance;
 	}
 	
+	public void setCurrentRoom(Room r){
+		currentRoom = r;
+	}
+	
 	public void moveDirection(Direction d){
 		lastDirection = d;
-		//TODO: Implement direction frobbage.
+		currentRoom = currentRoom.moveDirection(d);
+		look();
 	}
 	
 	public void take(String item){
-		//TODO: STUB, implement game logic
-		System.out.println("Taking "+item);
+		try {
+			inventory.add(currentRoom.take(item));
+			System.out.println("Taken.");
+		} catch (ItemNotFoundByNameException e) {
+			System.out.println("There's no "+item+" here.");
+		}
+	}
+	
+	public void look(){
+		System.out.println(currentRoom.look());
+	}
+	
+	public void listInventory(){
+		System.out.println("You are carrying:");
+		for(Item i : inventory){
+			System.out.println(i.getName());
+		}
 	}
 	
 	public void give(String item, String person){
@@ -44,7 +67,13 @@ public class GameState {
 	}
 	
 	public void drop(String item){
-		//TODO: STUB, implement game logic
-		System.out.println("Dropping "+item);
+		try {
+			Item i = inventory.getFirstObjectByName(item);
+			currentRoom.addItem(i);
+			inventory.remove(i);
+			System.out.println("Dropped "+item);
+		} catch (ItemNotFoundByNameException e) {
+			System.out.println("You're not carrying "+item);
+		}
 	}
 }
