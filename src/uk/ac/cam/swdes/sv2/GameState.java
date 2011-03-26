@@ -31,29 +31,61 @@ public class GameState {
 		return instance;
 	}
 	
+	/**
+	 * Set the current room of the statemachine
+	 * 
+	 * Useful when starting the game, or warping the player somewhere
+	 * @param r A room
+	 */
 	public void setCurrentRoom(Room r){
 		currentRoom = r;
 	}
 	
+	/**
+	 * Move statemachine to adjacent room given by d
+	 * @param d A cardinal Direction
+	 */
 	public void moveDirection(Direction d){
 		lastDirection = d;
-		currentRoom = currentRoom.moveDirection(d);
-		look();
+		try {
+			currentRoom = currentRoom.moveDirection(d);
+			currentRoom.enterLook();
+		} catch (RoomNotFoundException e) {
+			System.out.println("You can't go that way.");
+		}
+		
 	}
 	
+	/**
+	 * Removes item from room, and places in inventory
+	 * @param item Name of item as String
+	 */
 	public void take(String item){
-		try {
-			inventory.add(currentRoom.take(item));
-			System.out.println("Taken.");
-		} catch (ItemNotFoundByNameException e) {
-			System.out.println("There's no "+item+" here.");
+		if(item.equals("all")){
+			for(Item i: currentRoom.getItems()){
+				inventory.add(i);
+				System.out.println("Took "+i.getName());
+			}
+		}else{
+			try {
+				inventory.add(currentRoom.take(item));
+				System.out.println("Took "+item);
+			} catch (ItemNotFoundByNameException e) {
+				System.out.println("There's no "+item+" here.");
+			}
 		}
 	}
 	
+	/**
+	 * Prints description of room
+	 */
 	public void look(){
 		System.out.println(currentRoom.look());
 	}
 	
+	/**
+	 * Shows what the player is carrying
+	 */
 	public void listInventory(){
 		System.out.println("You are carrying:");
 		for(Item i : inventory){
@@ -61,11 +93,20 @@ public class GameState {
 		}
 	}
 	
+	/**
+	 * Give item to person, not presently implemented
+	 * @param item
+	 * @param person
+	 */
 	public void give(String item, String person){
 		//TODO: STUB, implement game logic
 		System.out.println("Giving "+item+" to "+person);
 	}
 	
+	/**
+	 * Removes item from person and puts it in room
+	 * @param item Name of item to be dropped
+	 */
 	public void drop(String item){
 		try {
 			Item i = inventory.getFirstObjectByName(item);

@@ -39,10 +39,10 @@
 	</target>
 
 	<target name="build" depends="buildgrammar" 
-		description="compile the source " >
+		description="compile the source" >
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src-dir}" destdir="${build-dir}">
-			<classpath refid="classpath.base"/>
+			<classpath refid="classpath.base" />
 		</javac>
 	</target>
 

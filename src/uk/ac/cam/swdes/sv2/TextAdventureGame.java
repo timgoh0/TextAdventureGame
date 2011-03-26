@@ -4,6 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * 
+ * A demo entrypoint with a silly example
+ * @author timgoh0
+ *
+ */
 public class TextAdventureGame {
 
 	/**
@@ -20,6 +26,11 @@ public class TextAdventureGame {
 		r.addItem(new Item("widget", "A widget!"));
 		GameState s = GameState.getInstance();
 		s.setCurrentRoom(r);
+		//And another room adjacent to it
+		Room n = new Room("The north room", "It's a room to the north!");
+		r.addAdjacentRoom(n, Direction.NORTH);
+		n.addAdjacentRoom(r, Direction.SOUTH);
+		
 		s.look();
 		//Sit in a loop and wait for user input
 		while(true){

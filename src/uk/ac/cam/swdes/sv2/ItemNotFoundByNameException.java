@@ -1,5 +1,10 @@
 package uk.ac.cam.swdes.sv2;
 
+/**
+ * What happens when you can't find an item
+ * @author timgoh0
+ *
+ */
 public class ItemNotFoundByNameException extends Exception{
 
 	public ItemNotFoundByNameException() {
